@@ -20,10 +20,6 @@ function Menuzaun(props) {
         </Col>
         <Col md={4} style={{ textAlign: "right" }}>
           <Button
-            onClick={() => {
-              // Função POST
-              window.location.href = "/acesso"
-            }}
             disabled={props.disabledButton}
           >
             Enviar Enquete

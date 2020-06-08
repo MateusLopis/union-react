@@ -1,11 +1,48 @@
 import React, { useState, useEffect } from "react";
+import { Layout, Row, Col, Input, Button } from "antd";
+import Form from "antd/lib/form/Form";
+import Title from "antd/lib/skeleton/Title";
+
+const { Sider, Content } = Layout;
 
 function Login() {
   return (
-    <h1>
-      Hello World!
-    </h1>
-  )
+    <Layout style={{ minHeight: "100vh" }}>
+      <Layout style={{ minHeight: "100vh" }}>
+        <Content style={{ minHeight: "100vh" }}>
+          <Row
+            type="flex"
+            justify="center"
+            align="middle"
+            style={{ minHeight: "100vh" }}
+          >
+            <Col xs={20} md={12}>
+              <h1>BLABLA</h1>
+              <Input placeholder="Email" />
+
+              <Button
+                type="primary"
+                onClick={() => {
+                  window.location.href = "/enquete";
+                }}
+              >
+                Entrar
+              </Button>
+            </Col>
+          </Row>
+        </Content>
+      </Layout>
+      <Sider
+        width="60%"
+        style={{
+          background: "url(https://i.imgur.com/wJLKOub.jpg) no-repeat",
+          backgroundSize: "cover",
+        }}
+        breakpoint="md"
+        collapsedWidth="0"
+      />
+    </Layout>
+  );
 }
 
 export default Login;

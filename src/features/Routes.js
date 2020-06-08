@@ -7,8 +7,8 @@ import Login from "./Login"
 
 export default props => (
   <Switch>
-    <Route exact path="/" component={App} />
-    <Route exact path="/acesso" component={Login} />
+    <Route exact path="/" component={Login} />
+    <Route exact path="/enquete" component={App} />
     <Redirect from="*" to="/" />
   </Switch>
 );
