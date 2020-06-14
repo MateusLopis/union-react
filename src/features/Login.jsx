@@ -17,12 +17,16 @@ function Login() {
             style={{ minHeight: "100vh" }}
           >
             <Col xs={20} md={12}>
-              <h1>BLABLA</h1>
-              <Input placeholder="Email" />
+              
+              <h1>Convidado do casal ... e ...</h1>
 
+              <Input placeholder="Nome" />
               <Button
-                type="primary"
-                onClick={() => {
+              style={{ marginTop: "20px", marginLeft:"50px", 
+              backgroundColor: "#ff4646", 
+              borderColor: "#ff4646"}}   
+              type="primary"
+              onClick={() => {
                   window.location.href = "/enquete";
                 }}
               >
@@ -33,7 +37,7 @@ function Login() {
         </Content>
       </Layout>
       <Sider
-        width="60%"
+        width="75%"
         style={{
           background: "url(https://i.imgur.com/wJLKOub.jpg) no-repeat",
           backgroundSize: "cover",

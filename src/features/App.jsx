@@ -21,7 +21,10 @@ function Menuzaun(props) {
         <Col md={4} style={{ textAlign: "right" }}>
           <Button
             disabled={props.disabledButton}
-          >
+          style={{backgroundColor:"#ff4646", borderColor: "#ff4646"}}
+          onClick={() => {
+            window.location.href = "/agradecimento";
+          }}>
             Enviar Enquete
           </Button>
         </Col>
@@ -61,7 +64,7 @@ function App() {
       <Header
         style={{
           backgroundColor: "#fff",
-          textAlign: "center",
+          textAlign: "left",
           height: "100px",
           boxShadow: "2px 5px #f4f4f4",
         }}
