@@ -2,8 +2,8 @@ import React, { useState, useEffect, Fragment, Component } from "react";
 import { Button, Menu, Row, Col, Progress, Layout, Card, Skeleton } from "antd";
 import Meta from "antd/lib/card/Meta";
 
-import empresaController from "./api/empresaController";
-import servicosController from "./api/servicosController";
+import enqueteController from "./api/enqueteController";
+import perguntaController from "./api/perguntaController";
 import { createBrowserHistory } from "history";
 
 const { Header } = Layout;
@@ -21,10 +21,11 @@ function Menuzaun(props) {
         <Col md={4} style={{ textAlign: "right" }}>
           <Button
             disabled={props.disabledButton}
-          style={{backgroundColor:"#ff4646", borderColor: "#ff4646"}}
-          onClick={() => {
-            window.location.href = "/agradecimento";
-          }}>
+            style={{ backgroundColor: "#ff4646", borderColor: "#ff4646" }}
+            onClick={() => {
+              window.location.href = "/agradecimento";
+            }}
+          >
             Enviar Enquete
           </Button>
         </Col>
@@ -33,30 +34,48 @@ function Menuzaun(props) {
   );
 }
 
-function App() {
+function App(props) {
   let [progresso, setProgresso] = useState(0);
-  let [titulo, setTitulo] = useState("Seja Bem-vindo!");
-  let [corporations, setsCorporations] = useState([]);
+  let [enquete, setEnquete] = useState([]);
 
-  const renderCorporation = async () => {
-    const empresas = await empresaController();
-    const servicos = await servicosController();
+  let [titulo, setTitulo] = useState("");
 
-    const corporacao = empresas.map((empresa) => {
-      return {
-        ...empresa,
-        servicos: servicos.filter(
-          (servico) => servico.empresa.idEmpresa === empresa.idEmpresa
-        ),
-      };
+  const mapPegunta = (pergunta) => {
+    const favoritos = [];
+    for (let i = 0; i - 4; i++) {
+      favoritos.push(pergunta[`favorito${i + 1}`]);
+    }
+    return {
+      ...pergunta,
+      favoritos,
+    };
+  };
+
+  const renderEnquete = async () => {
+    const [, id] = props && props.location.search.split("=");
+    const enquetes = await enqueteController();
+    const perguntas = await perguntaController();
+
+    const [enqueteSelecionada] = enquetes.filter(
+      (enquete) => enquete.idEnquete.toString() === id
+    );
+    const perguntasSelecionada = perguntas.filter(
+      (pergunta) => pergunta.enquete.idEnquete.toString() === id
+    );
+
+    setEnquete({
+      ...enqueteSelecionada,
+      perguntas:
+        perguntasSelecionada.length > 0 && perguntasSelecionada.map(mapPegunta),
     });
-
-    setsCorporations(corporacao);
   };
 
   useEffect(() => {
-    renderCorporation();
+    renderEnquete();
+    setTitulo(`Seja Bem Vindo ${localStorage.getItem("nomeUsuario")}`);
   }, []);
+
+  console.log(enquete.perguntas);
 
   return (
     <Fragment>
@@ -64,73 +83,40 @@ function App() {
       <Header
         style={{
           backgroundColor: "#fff",
-          textAlign: "left",
+          textAlign: "center",
           height: "100px",
           boxShadow: "2px 5px #f4f4f4",
         }}
       >
         <h1>{titulo}</h1>
       </Header>
-      {corporations.map((corporation) => (
-        <Fragment>
-          <h1>{corporation.nomeEmpresa}</h1>
-          <Row style={{ marginLeft: "10px" }}>
-            {corporation.servicos.map((servico) => (
-              <Col tyle={{ marginLeft: "10px" }}>
-                <Card
-                  hoverable
-                  style={{ width: 240 }}
-                  cover={<img alt="example" src={servico.urlImagem} />}
-                  onClick={() => setProgresso(progresso + 10)}
-                >
-                  <Meta title={servico.nomeServico} />
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Fragment>
-      ))}
+      {enquete &&
+        enquete.perguntas &&
+        enquete.perguntas.map((pergunta) => (
+          <Fragment>
+            <h1>{pergunta.perguntaEscrita}</h1>
+            <Row style={{ marginLeft: "10px" }}>
+              {pergunta.favoritos.map((favorito) => (
+                <Fragment>
+                  {favorito && (
+                    <Col tyle={{ marginLeft: "10px" }}>
+                      <Card
+                        hoverable
+                        style={{ width: 240 }}
+                        cover={<img alt="example" src={favorito.servico.urlImagem} />}
+                        onClick={() => setProgresso(progresso + 10)}
+                      >
+                        <Meta title={favorito.servico.descricao} />
+                      </Card>
+                    </Col>
+                  )}
+                </Fragment>
+              ))}
+            </Row>
+          </Fragment>
+        ))}
     </Fragment>
   );
 }
 
 export default App;
-
-// const questions = [
-//   {
-//     id: "question1",
-//     question: "Qual é a casa blabla",
-//     answers: [
-//       {
-//         id: "1-answer1",
-//         url:
-//           "http://www.odiariodemogi.net.br/wp-content/uploads/2019/11/21a.jpg",
-//         descricao: "Casa linda em Florença",
-//       },
-//       {
-//         id: "1-answer2",
-//         url:
-//           "http://agencia.sorocaba.sp.gov.br/wp-content/uploads/2019/02/casaro-brig-tobias-gui-urban-20.jpg",
-//         descricao: "Casa linda em Bragança",
-//       },
-//     ],
-//   },
-//   {
-//     id: "question2",
-//     question: "Qual é a casa Blublu",
-//     answers: [
-//       {
-//         id: "2-answer1",
-//         url:
-//           "http://www.odiariodemogi.net.br/wp-content/uploads/2019/11/21a.jpg",
-//         descricao: "Casa linda em Florença",
-//       },
-//       {
-//         id: "2-answer2",
-//         url:
-//           "http://agencia.sorocaba.sp.gov.br/wp-content/uploads/2019/02/casaro-brig-tobias-gui-urban-20.jpg",
-//         descricao: "Casa linda em Bragança",
-//       },
-//     ],
-//   },
-// ];

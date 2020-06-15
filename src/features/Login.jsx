@@ -3,9 +3,36 @@ import { Layout, Row, Col, Input, Button } from "antd";
 import Form from "antd/lib/form/Form";
 import Title from "antd/lib/skeleton/Title";
 
+import enqueteController from "./api/enqueteController";
+import servicosController from "./api/perguntaController";
+
 const { Sider, Content } = Layout;
 
-function Login() {
+function Login(props) {
+  const [enquete, setEnquete] = useState({});
+  const [nomeUsuario, setNomeUsuario] = useState("");
+  const [block, setBlock] = useState(false);
+
+  const renderQuery = async () => {
+    const enquetes = await enqueteController();
+    const [, id] = props && props.location.search.split("=");
+
+    if (id) {
+      const [enqueteSelecionada] = enquetes.filter(
+        (enquete) => enquete.idEnquete.toString() === id
+      );
+
+      setEnquete(enqueteSelecionada);
+      setBlock(false);
+    } else {
+      setBlock(true);
+    }
+  };
+
+  useEffect(() => {
+    renderQuery();
+  }, []);
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Layout style={{ minHeight: "100vh" }}>
@@ -17,18 +44,27 @@ function Login() {
             style={{ minHeight: "100vh" }}
           >
             <Col xs={20} md={12}>
-              
-              <h1>Convidado do casal ... e ...</h1>
-
-              <Input placeholder="Nome" />
+              <h2>Convidado do casal:</h2>
+              <h2>{enquete.tituloEnquete}</h2>
+              <Input
+                placeholder="Nome"
+                value={nomeUsuario}
+                onChange={({ target: { value } }) => setNomeUsuario(value)}
+                disabled={block}
+              />
               <Button
-              style={{ marginTop: "20px", marginLeft:"50px", 
-              backgroundColor: "#ff4646", 
-              borderColor: "#ff4646"}}   
-              type="primary"
-              onClick={() => {
-                  window.location.href = "/enquete";
+                style={{
+                  marginTop: "20px",
+                  marginLeft: "50px",
+                  backgroundColor: "#ff4646",
+                  borderColor: "#ff4646",
                 }}
+                type="primary"
+                onClick={() => {
+                  window.location.href = `/enquete?id=${enquete.idEnquete}`;
+                  localStorage.setItem("nomeUsuario", nomeUsuario);
+                }}
+                disabled={block}
               >
                 Entrar
               </Button>
