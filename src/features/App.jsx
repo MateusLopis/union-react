@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Fragment, Component } from "react";
-import { Button, Menu, Row, Col, Progress, Layout, Card, Skeleton } from "antd";
+import { Button, Menu, Row, Col, Progress, Layout, Card } from "antd";
 import Meta from "antd/lib/card/Meta";
 
 import enqueteController from "./api/enqueteController";
 import perguntaController from "./api/perguntaController";
 import { createBrowserHistory } from "history";
+import "./App.css";
 
 const { Header } = Layout;
 
@@ -36,13 +37,14 @@ function Menuzaun(props) {
 
 function App(props) {
   let [progresso, setProgresso] = useState(0);
-  let [enquete, setEnquete] = useState([]);
+  let [eichProgress, setEichProgress] = useState(0);
 
+  let [enquete, setEnquete] = useState([]);
   let [titulo, setTitulo] = useState("");
 
   const mapPegunta = (pergunta) => {
     const favoritos = [];
-    for (let i = 0; i - 4; i++) {
+    for (let i = 0; i < 4; i++) {
       favoritos.push(pergunta[`favorito${i + 1}`]);
     }
     return {
@@ -68,18 +70,33 @@ function App(props) {
       perguntas:
         perguntasSelecionada.length > 0 && perguntasSelecionada.map(mapPegunta),
     });
+    setEichProgress(100 / perguntasSelecionada.length);
   };
+
+  const handleSelecionarCarrinho = () => {};
+
+  const resetSelectAnswer = (pergunta, favoritoParam) => {
+    return pergunta.favoritos.map((favorito) => {
+      return favorito !== null
+        ? {
+            ...favorito,
+            selecionado: favoritoParam.idFavorito === favorito.idFavorito,
+          }
+        : null;
+    });
+  };
+
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
 
   useEffect(() => {
     renderEnquete();
     setTitulo(`Seja Bem Vindo ${localStorage.getItem("nomeUsuario")}`);
   }, []);
 
-  console.log(enquete.perguntas);
-
   return (
     <Fragment>
-      <Menuzaun progresso={progresso} disabledButton={false} />
+      <Menuzaun progresso={progresso} disabledButton={progresso < 100} />
       <Header
         style={{
           backgroundColor: "#fff",
@@ -99,12 +116,40 @@ function App(props) {
               {pergunta.favoritos.map((favorito) => (
                 <Fragment>
                   {favorito && (
-                    <Col tyle={{ marginLeft: "10px" }}>
+                    <Col style={{ marginRight: "20px" }}>
                       <Card
-                        hoverable
+                        hoverable={!favorito.selecionado}
+                        className={favorito.selecionado ? "clicado" : ""}
                         style={{ width: 240 }}
-                        cover={<img alt="example" src={favorito.servico.urlImagem} />}
-                        onClick={() => setProgresso(progresso + 10)}
+                        cover={
+                          <img
+                            style={{ width: 240, height: 180 }}
+                            alt="example"
+                            src={favorito.servico.urlImagem}
+                          />
+                        }
+                        onClick={() => {
+                          handleSelecionarCarrinho();
+                          pergunta.favoritos = resetSelectAnswer(
+                            pergunta,
+                            favorito
+                          );
+                          setProgresso(
+                            enquete.perguntas
+                              .filter((pergunta) =>
+                                pergunta.favoritos
+                                  .map(
+                                    (favorito) =>
+                                      favorito && favorito.selecionado
+                                  )
+                                  .includes(true)
+                              )
+                              .map((el) => eichProgress)
+                              .reduce((a, b) => a + b)
+                          );
+                          forceUpdate();
+                        }}
+                        type="primary"
                       >
                         <Meta title={favorito.servico.descricao} />
                       </Card>
