@@ -17,7 +17,7 @@ function Menuzaun(props) {
           <div className="logo" />
         </Col>
         <Col md={14}>
-          <Progress percent={props.progresso} status="active" />
+          <Progress percent={props.progresso} status="active"  strokeColor="#FF7676"/>
         </Col>
         <Col md={4} style={{ textAlign: "right" }}>
           <Button
@@ -111,16 +111,16 @@ function App(props) {
         enquete.perguntas &&
         enquete.perguntas.map((pergunta) => (
           <Fragment>
-            <h1>{pergunta.perguntaEscrita}</h1>
-            <Row style={{ marginLeft: "10px" }}>
+            <h1 style={{marginLeft: "17%", marginTop: "40px"}} >{pergunta.perguntaEscrita}</h1>
+            <Row style={{ marginLeft: "17%" }}>
               {pergunta.favoritos.map((favorito) => (
-                <Fragment>
+                <Fragment style={{ marginLeft: "30px"}}>
                   {favorito && (
-                    <Col style={{ marginRight: "20px" }}>
+                    <Col style={{ marginRight: "30px"}}>
                       <Card
                         hoverable={!favorito.selecionado}
                         className={favorito.selecionado ? "clicado" : ""}
-                        style={{ width: 240 }}
+                        style={{ width: 240}}
                         cover={
                           <img
                             style={{ width: 240, height: 180 }}

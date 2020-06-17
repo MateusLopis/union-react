@@ -18,13 +18,15 @@ function Final() {
           >
             <Col xs={20} md={15}>
               
-              <h1>Obrigado pela</h1>
-              <h1>sua opnião!</h1>
+              <h2 style={{fontSize: "30px"}}>Obrigado pela</h2>
+              <h2 style={{fontSize: "30px"}}>sua opnião!</h2>
               <br/>
+              <h4 style={{fontSize: "15px"}}>
               Ajudar os noivos desse momento é bem <br/>
               importante. Mantenha contato com eles. Agora <br/>
               é so aguentar o tão esperado dia do <br/>
               casamento!
+              </h4>
 
               <br/>
               <Button
@@ -33,7 +35,7 @@ function Final() {
               borderColor: "#ff4646"}}   
               type="primary"
               onClick={() => {
-                  window.location.href = "/enquete";
+                  window.location.href = "https://www.google.com/";
                 }}
               >
                 Pagina Inicial!
