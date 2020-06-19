@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const config = require("./config.json");
 
-async function postConvidado(idUsuario, convidado) {
+export default async function postConvidado(idUsuario, convidado) {
   try {
     const response = await axios.post(
       `${config.baseURL}/convidados/${idUsuario}`,
@@ -14,7 +14,7 @@ async function postConvidado(idUsuario, convidado) {
   }
 }
 
-async function getConvidado() {
+export default async function getConvidado() {
   try {
     const response = await axios.get(`${config.baseURL}/convidados`);
     return response.data;
@@ -23,7 +23,7 @@ async function getConvidado() {
   }
 }
 
-async function putConvidado(idConvidado, convidado) {
+export default async function putConvidado(idConvidado, convidado) {
   try {
     const response = await axios.put(
       `${config.baseURL}/convidados/${idConvidado}`,
@@ -35,4 +35,4 @@ async function putConvidado(idConvidado, convidado) {
   }
 }
 
-module.exports = { postConvidado, putConvidado, getConvidado };
+//module.exports = { postConvidado, putConvidado, getConvidado };

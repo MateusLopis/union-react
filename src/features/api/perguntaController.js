@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const config = require("./config.json");
 
-async function getPerguntas() {
+export default async function getPerguntas() {
   try {
     const response = await axios.get(`${config.baseURL}/perguntas`);
     return response.data;
@@ -11,4 +11,4 @@ async function getPerguntas() {
   }
 }
 
-module.exports = getPerguntas;
+//module.exports = getPerguntas;

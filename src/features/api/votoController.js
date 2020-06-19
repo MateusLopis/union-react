@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const config = require("./config.json");
 
-async function postVoto(idPergunta, votos) {
+export default async function postVoto(idPergunta, votos) {
   try {
     const response = await axios.post(
       `${config.baseURL}/votos/${idPergunta}`,
@@ -14,4 +14,4 @@ async function postVoto(idPergunta, votos) {
   }
 }
 
-module.exports = postVoto;
+//module.exports = postVoto;
