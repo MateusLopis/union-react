@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Layout, Row, Col, Input, Button } from "antd";
-import Form from "antd/lib/form/Form";
-import Title from "antd/lib/skeleton/Title";
+import moment from "moment";
 
 import enqueteController from "./api/enqueteController";
-import servicosController from "./api/perguntaController";
+import { postConvidado } from "./api/convidadoController";
 
 const { Sider, Content } = Layout;
 
@@ -26,6 +25,24 @@ function Login(props) {
       setBlock(false);
     } else {
       setBlock(true);
+    }
+  };
+
+  const onSubmit = async () => {
+    const {
+      usuario: { idUsuario },
+    } = enquete;
+    const convidado = await postConvidado(idUsuario, {
+      nome: nomeUsuario,
+      status: "votando",
+      data: moment(),
+      usuario: {
+        idUsuario,
+      },
+    });
+    if (convidado) {
+      window.location.href = `/enquete?id=${enquete.idEnquete}`;
+      localStorage.setItem("idConvidado", convidado.idConvidado);
     }
   };
 
@@ -60,9 +77,8 @@ function Login(props) {
                   borderColor: "#ff4646",
                 }}
                 type="primary"
-                onClick={() => {
-                  window.location.href = `/enquete?id=${enquete.idEnquete}`;
-                  localStorage.setItem("nomeUsuario", nomeUsuario);
+                onClick={async () => {
+                  await onSubmit();
                 }}
                 disabled={block}
               >

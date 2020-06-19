@@ -1,15 +1,43 @@
-import React, { useState, useEffect, Fragment, Component } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Button, Menu, Row, Col, Progress, Layout, Card } from "antd";
 import Meta from "antd/lib/card/Meta";
 
 import enqueteController from "./api/enqueteController";
 import perguntaController from "./api/perguntaController";
-import { createBrowserHistory } from "history";
+import { getConvidado, putConvidado } from "./api/convidadoController";
+import votoController from "./api/votoController";
+
 import "./App.css";
 
 const { Header } = Layout;
 
 function Menuzaun(props) {
+  const { convidado, enquete } = props.registro;
+
+  const onSubmit = async () => {
+    const { idConvidado } = convidado;
+    const { perguntas } = enquete;
+    const convidadoPUT = await putConvidado(idConvidado, {
+      ...convidado,
+      status: "votou",
+    });
+
+    if (convidadoPUT) {
+      for (const pergunta of perguntas) {
+        const [resposta] = pergunta.favoritos.filter(
+          (favorito) => favorito && favorito.selecionado
+        );
+        await votoController(pergunta.idPergunta, {
+          convidado: { idConvidado },
+          favorito: { idFavorito: resposta.idFavorito },
+          pergunta: { idPergunta: resposta.idPergunta },
+        });
+      }
+    }
+    
+    window.location.href = `/agradecimento`;
+  };
+
   return (
     <Menu mode="horizontal" style={{ borderBottom: "5px #ff4646 solid" }}>
       <Row>
@@ -17,14 +45,18 @@ function Menuzaun(props) {
           <div className="logo" />
         </Col>
         <Col md={14}>
-          <Progress percent={props.progresso} status="active"  strokeColor="#FF7676"/>
+          <Progress
+            percent={props.progresso}
+            status="active"
+            strokeColor="#FF7676"
+          />
         </Col>
         <Col md={4} style={{ textAlign: "right" }}>
           <Button
             disabled={props.disabledButton}
             style={{ backgroundColor: "#ff4646", borderColor: "#ff4646" }}
-            onClick={() => {
-              window.location.href = "/agradecimento";
+            onClick={async () => {
+              await onSubmit();
             }}
           >
             Enviar Enquete
@@ -40,7 +72,7 @@ function App(props) {
   let [eichProgress, setEichProgress] = useState(0);
 
   let [enquete, setEnquete] = useState([]);
-  let [titulo, setTitulo] = useState("");
+  let [convidado, setConvidado] = useState({});
 
   const mapPegunta = (pergunta) => {
     const favoritos = [];
@@ -51,6 +83,17 @@ function App(props) {
       ...pergunta,
       favoritos,
     };
+  };
+
+  const renderConvidado = async () => {
+    const idConvidado = localStorage.getItem("idConvidado");
+    const convidados = await getConvidado();
+
+    const [convidadoSelecionado] = convidados.filter(
+      (convidado) => convidado.idConvidado.toString() === idConvidado
+    );
+
+    setConvidado(convidadoSelecionado);
   };
 
   const renderEnquete = async () => {
@@ -91,12 +134,16 @@ function App(props) {
 
   useEffect(() => {
     renderEnquete();
-    setTitulo(`Seja Bem Vindo ${localStorage.getItem("nomeUsuario")}`);
+    renderConvidado();
   }, []);
 
   return (
     <Fragment>
-      <Menuzaun progresso={progresso} disabledButton={progresso < 100} />
+      <Menuzaun
+        progresso={progresso}
+        disabledButton={progresso < 100}
+        registro={{ convidado, enquete }}
+      />
       <Header
         style={{
           backgroundColor: "#fff",
@@ -105,22 +152,24 @@ function App(props) {
           boxShadow: "2px 5px #f4f4f4",
         }}
       >
-        <h1>{titulo}</h1>
+        <h1>Seja Bem Vindo {convidado && convidado.nome}</h1>
       </Header>
       {enquete &&
         enquete.perguntas &&
         enquete.perguntas.map((pergunta) => (
           <Fragment>
-            <h1 style={{marginLeft: "17%", marginTop: "40px"}} >{pergunta.perguntaEscrita}</h1>
+            <h1 style={{ marginLeft: "17%", marginTop: "40px" }}>
+              {pergunta.perguntaEscrita}
+            </h1>
             <Row style={{ marginLeft: "17%" }}>
               {pergunta.favoritos.map((favorito) => (
-                <Fragment style={{ marginLeft: "30px"}}>
+                <Fragment style={{ marginLeft: "30px" }}>
                   {favorito && (
-                    <Col style={{ marginRight: "30px"}}>
+                    <Col style={{ marginRight: "30px" }}>
                       <Card
                         hoverable={!favorito.selecionado}
                         className={favorito.selecionado ? "clicado" : ""}
-                        style={{ width: 240}}
+                        style={{ width: 240 }}
                         cover={
                           <img
                             style={{ width: 240, height: 180 }}
