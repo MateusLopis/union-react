@@ -19,10 +19,10 @@ function Final() {
             <Col xs={20} md={15}>
               
               <h2 style={{fontSize: "30px"}}>Obrigado pela</h2>
-              <h2 style={{fontSize: "30px"}}>sua opnião!</h2>
+              <h2 style={{fontSize: "30px"}}>sua opinião!</h2>
               <br/>
               <h4 style={{fontSize: "15px"}}>
-              Ajudar os noivos desse momento é bem <br/>
+              Ajudar os noivos nesse momento é bem <br/>
               importante. Mantenha contato com eles. Agora <br/>
               é so aguentar o tão esperado dia do <br/>
               casamento!

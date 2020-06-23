@@ -1,6 +1,9 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment, src } from "react";
 import { Button, Menu, Row, Col, Progress, Layout, Card } from "antd";
 import Meta from "antd/lib/card/Meta";
+
+import union from "../images/union.PNG";
+
 
 import enqueteController from "./api/enqueteController";
 import perguntaController from "./api/perguntaController";
@@ -42,7 +45,9 @@ function Menuzaun(props) {
     <Menu mode="horizontal" style={{ borderBottom: "5px #ff4646 solid" }}>
       <Row>
         <Col md={5}>
-          <div className="logo" />
+          <div className="logo" style={{ marginLeft: "50px" }}>
+          <img src={union} width="110px" />
+          </div>
         </Col>
         <Col md={14}>
           <Progress
@@ -152,7 +157,7 @@ function App(props) {
           boxShadow: "2px 5px #f4f4f4",
         }}
       >
-        <h1>Seja Bem Vindo {convidado && convidado.nome}</h1>
+        <h1>Seja Bem Vindo {convidado && convidado.nome} !</h1>
       </Header>
       {enquete &&
         enquete.perguntas &&
@@ -200,7 +205,7 @@ function App(props) {
                         }}
                         type="primary"
                       >
-                        <Meta title={favorito.servico.descricao} />
+                        <Meta title={favorito.servico.nomeServico} />
                       </Card>
                     </Col>
                   )}

@@ -61,8 +61,11 @@ function Login(props) {
             style={{ minHeight: "100vh" }}
           >
             <Col xs={20} md={12}>
-              <h2>Convidado do casal:</h2>
+              <h2>Título da Enquete:</h2>
               <h2>{enquete.tituloEnquete}</h2>
+              <br/>
+              <br/>
+              Convidado:
               <Input
                 placeholder="Nome"
                 value={nomeUsuario}
@@ -89,7 +92,7 @@ function Login(props) {
         </Content>
       </Layout>
       <Sider
-        width="75%"
+        width="70%"
         style={{
           background: "url(https://i.imgur.com/wJLKOub.jpg) no-repeat",
           backgroundSize: "cover",
