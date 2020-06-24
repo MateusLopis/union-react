@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment, src } from "react";
 import { Button, Menu, Row, Col, Progress, Layout, Card } from "antd";
 import Meta from "antd/lib/card/Meta";
 
-import union from "../images/union.PNG";
+import union from "../images/union.png";
 
 
 import enqueteController from "./api/enqueteController";

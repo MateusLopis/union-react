@@ -67,7 +67,7 @@ function Login(props) {
               <br/>
               Convidado:
               <Input
-                placeholder="Nome"
+                placeholder="Nome Completo"
                 value={nomeUsuario}
                 onChange={({ target: { value } }) => setNomeUsuario(value)}
                 disabled={block}
